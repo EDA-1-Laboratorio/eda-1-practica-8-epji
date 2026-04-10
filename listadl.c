@@ -25,10 +25,15 @@ void insertar_inicio(ListaDL *lista, DATO dato) {
         return;
 
     if (lista->cabeza == NULL) {
+        nuevo -> siguiente = nuevo;
+        nuevo -> previo = nuevo;
         lista->cabeza = nuevo;
     } else {
+        dllista *ultimo = lista -> cabeza -> previo;
         nuevo->siguiente = lista->cabeza;
+        nuevo -> previo = ultimo;
         lista->cabeza->previo = nuevo;
+        ultimo -> siguiente = nuevo;
         lista->cabeza = nuevo;
     }
     lista->longitud++;
@@ -171,7 +176,12 @@ int longitud(ListaDL *lista) {
 }
 
 void imprimir_lista(ListaDL *lista) {
-    dllista *actual = lista->cabeza;
+    if(lista->cabeza == NULL){
+        printf("lista vacia\n");
+        return;
+    }
+    dllista *actual = lista->cabeza; 
+        
     while (actual != NULL) {
         printf("[%d]", actual->dato);
         if (actual->siguiente != NULL)
