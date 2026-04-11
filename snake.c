@@ -136,7 +136,15 @@ void mostrar_estado(int turno, int puntaje, int dir) {
 DATO calcular_nueva_cabeza(DATO cabeza_actual, int direccion) {
     int f = FILA(cabeza_actual);
     int c = COL(cabeza_actual);
-
+    
+    if (direccion == ARRIBA )
+        f --;
+    else if (direccion == ABAJO)
+        f ++;
+    else if (direccion == IZQUIERDA)
+        c --; 
+    else if (direccion == DERECHA)
+        c ++;
     /* -------- COMPLETAR --------
      * Modifica f y/o c según la dirección:
      *   ARRIBA    -> f disminuye en 1
@@ -161,7 +169,8 @@ DATO calcular_nueva_cabeza(DATO cabeza_actual, int direccion) {
 int colision_pared(DATO posicion) {
     int f = FILA(posicion);
     int c = COL(posicion);
-
+    if (f <= 0 || f >= FILAS-1 || c <= 0 || c >= COLUMNAS-1)
+        return 1;
     /* -------- COMPLETAR --------
      * Retorna 1 si f o c están en el borde del tablero:
      *   f <= 0, f >= FILAS-1, c <= 0, c >= COLUMNAS-1
@@ -182,13 +191,12 @@ int colision_pared(DATO posicion) {
  *  Retorna: 1 si hay colisión, 0 si no.
  */
 int colision_cuerpo(ListaDL *vibora, DATO nueva_pos) {
+    return buscar(vibora, nueva_pos) != -1;
     /* -------- COMPLETAR --------
      * Usa buscar(vibora, nueva_pos) para saber si la posición
      * ya está ocupada por un segmento.
      * --------------------------- */
 
-
-    return 0; /* Sustituir */
 }
 
 /*
@@ -212,6 +220,15 @@ int colision_cuerpo(ListaDL *vibora, DATO nueva_pos) {
  */
 int mover_vibora(ListaDL *vibora, int direccion, DATO comida) {
     DATO nueva_pos = calcular_nueva_cabeza(vibora->cabeza->dato, direccion);
+    
+    insertar_inicio(vibora, nueva_pos);
+    
+    if (nueva_pos == comida) {
+        return 1;
+    }
+    
+    eliminar_final(vibora);
+    return 0;
 
     /* -------- COMPLETAR --------
      * 1. Inserta nueva_pos al inicio de la lista.
